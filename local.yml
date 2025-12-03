@@ -17,10 +17,17 @@
           - 0ad
         state: present
 
+    - name: Add user to sudoers
+      user:
+        name: user
+        groups: sudo
+        append: yes
+      ignore_errors: yes  # In case user doesn't exist
+
     - name: Clone/update dotfiles repo
       git:
         repo: https://github.com/mikeizbicki/dotfiles
-        dest: "{{ ansible_env.HOME }}/dotfiles-temp"
+        dest: "/home/user"
         version: dotfiles
         force: yes
       become: no
