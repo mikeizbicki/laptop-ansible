@@ -33,9 +33,16 @@
     - name: Clone/update dotfiles repo
       git:
         repo: https://github.com/mikeizbicki/dotfiles
-        dest: "/home/user"
+        dest: "{{ ansible_env.HOME }}/dotfiles-temp"
         version: dotfiles
         force: yes
+      become: no
+
+    - name: Copy dotfiles to home directory
+      shell: |
+        cd /home/user
+        cp -r dotfiles-temp/. .
+        rm -rf dotfiles-temp
       become: no
 
     - name: Add garage host entry
