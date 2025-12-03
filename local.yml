@@ -51,3 +51,23 @@
         state: present
         backup: yes
 
+    - name: Create Firefox policies directory
+      file:
+        path: /etc/firefox-esr/policies
+        state: directory
+        mode: '0755'
+
+    - name: Install uBlock Origin via Firefox policy
+      copy:
+        content: |
+          {
+            "policies": {
+              "Extensions": {
+                "Install": [
+                  "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+                ]
+              }
+            }
+          }
+        dest: /etc/firefox-esr/policies/policies.json
+        mode: '0644'
