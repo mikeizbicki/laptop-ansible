@@ -42,7 +42,6 @@
       lineinfile:
         path: /etc/hosts
         line: "192.168.4.31 garage"
-        regexp: "^.*\s+garage\s*$"
         state: present
         backup: yes
 
