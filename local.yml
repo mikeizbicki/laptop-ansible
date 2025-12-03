@@ -30,13 +30,13 @@
         append: yes
       ignore_errors: yes  # In case user doesn't exist
 
-        #- name: Clone/update dotfiles repo
-        #git:
-        #repo: https://github.com/mikeizbicki/dotfiles
-        #dest: "/home/user"
-        #version: dotfiles
-        #force: yes
-        #become: no
+    - name: Clone/update dotfiles repo
+      git:
+        repo: https://github.com/mikeizbicki/dotfiles
+        dest: "/home/user"
+        version: dotfiles
+        force: yes
+      become: no
 
     - name: Copy dotfiles to home directory
       shell: |

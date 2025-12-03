@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-REPO_URL="https://github.com/yourusername/ansible-laptop-config.git"
+REPO_URL="https://github.com/mikeizbicki/laptop-ansible"
 CRON_JOB="0 * * * * /usr/bin/ansible-pull -U $REPO_URL > /var/log/ansible-pull.log 2>&1"
 TEMP_CRON="/tmp/cron_backup.$$"
 
