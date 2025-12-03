@@ -41,7 +41,7 @@
     - name: Copy dotfiles to home directory
       shell: |
         cp -r "{{ ansible_env.HOME }}/dotfiles-temp/." /home/user
-        rm -rf "{{ ansible_env.HOME }}/dotfiles-temp/."
+        rm -rf "{{ ansible_env.HOME }}/dotfiles-temp"
       become: no
 
     - name: Add garage host entry
