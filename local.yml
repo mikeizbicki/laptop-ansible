@@ -38,9 +38,11 @@
         force: yes
       become: no
 
-    - name: Copy dotfiles to home directory
-      shell: |
-        cd {{ ansible_env.HOME }}
-        cp -r dotfiles-temp/. .
-        rm -rf dotfiles-temp
-      become: no
+    - name: Add garage host entry
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.4.31 garage"
+        regexp: "^.*\s+garage\s*$"
+        state: present
+        backup: yes
+

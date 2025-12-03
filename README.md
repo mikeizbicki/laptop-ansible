@@ -14,3 +14,10 @@ This command will:
 - install ansible
 - run ansible-pull on this repo
 - setup cron to run ansible-pull hourly
+
+## Manual updates
+
+You can trigger a manual update (instead of waiting for cron) with the following command:
+```
+ansible-pull -U https://github.com/mikeizbicki/laptop-ansible
+```
