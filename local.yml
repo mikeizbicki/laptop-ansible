@@ -5,6 +5,12 @@
     - name: Update apt cache
       apt:
         update_cache: yes
+
+    - name: Configure git (avoid interactive prompts)
+      shell: |
+        git config --global user.email "ansible@localhost" || true
+        git config --global user.name "Ansible" || true
+      become: no
         
     - name: Install essential packages
       apt:
