@@ -59,11 +59,12 @@
       become_user: user
 
     - name: Clone dotfiles directly to user home
-      git:
-        repo: https://github.com/mikeizbicki/dotfiles
-        dest: /home/user
-        version: dotfiles
-        force: yes
+      shell: |
+        cd $HOME
+        git init -q
+        git remote add origin https://github.com/mikeizbicki/dotfiles
+        git fetch dotfiles
+        git checkout -f dotfiles
       become: yes
       become_user: user
 
