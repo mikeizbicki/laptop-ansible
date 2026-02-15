@@ -61,13 +61,6 @@
         groups: sudo
         append: yes
 
-    - name: Configure git
-      shell: |
-        git config --global user.email "mike@izbicki.me" || true
-        git config --global user.name "Mike Izbicki" || true
-      become: yes
-      become_user: user
-
     - name: Clone dotfiles directly to user home
       shell: |
         cd $HOME
