@@ -89,15 +89,15 @@
           [User]
           Session=xmonad
 
-    - name: Configure GDM autologin
-      lineinfile:
-        path: /etc/gdm3/daemon.conf
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-        insertafter: '^\[daemon\]'
-      loop:
-        - { regexp: '^#?AutomaticLoginEnable', line: 'AutomaticLoginEnable=true' }
-        - { regexp: '^#?AutomaticLogin=', line: 'AutomaticLogin=user' }
+          #- name: Configure GDM autologin
+          #lineinfile:
+          #path: /etc/gdm3/daemon.conf
+          #regexp: "{{ item.regexp }}"
+          #line: "{{ item.line }}"
+          #insertafter: '^\[daemon\]'
+          #loop:
+          #- { regexp: '^#?AutomaticLoginEnable', line: 'AutomaticLoginEnable=true' }
+          #- { regexp: '^#?AutomaticLogin=', line: 'AutomaticLogin=user' }
 
     - name: Disable sleep and screen blank via logind
       lineinfile:
