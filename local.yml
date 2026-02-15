@@ -11,17 +11,12 @@
       apt:
         update_cache: yes
 
-    - name: Configure git (avoid interactive prompts)
-      shell: |
-        git config --global user.email "ansible@localhost" || true
-        git config --global user.name "Ansible" || true
-      become: no
-
     - name: Install essential packages
       apt:
         name:
           # desktop
           - firefox-esr
+          - thunderbird
 
           # games
           - luanti
@@ -55,21 +50,22 @@
         name: user
         groups: sudo
         append: yes
-      ignore_errors: yes  # In case user doesn't exist
 
-    - name: Clone/update dotfiles repo
+    - name: Configure git
+      shell: |
+        git config --global user.email "mike@izbicki.me" || true
+        git config --global user.name "Mike Izbicki" || true
+      become: yes
+      become_user: user
+
+    - name: Clone dotfiles directly to user home
       git:
         repo: https://github.com/mikeizbicki/dotfiles
-        dest: "{{ ansible_env.HOME }}/dotfiles-temp"
+        dest: /home/user
         version: dotfiles
         force: yes
-      become: no
-
-    - name: Copy dotfiles to home directory
-      shell: |
-        cp -r "{{ ansible_env.HOME }}/dotfiles-temp/." /home/user
-        rm -rf "{{ ansible_env.HOME }}/dotfiles-temp"
-      become: no
+      become: yes
+      become_user: user
 
     ########################################
     # Configure window manager
@@ -114,7 +110,7 @@
 
     - name: Recompile xmonad
       command: xmonad --recompile
-      become: no
+      become: yes
       become_user: user
 
   handlers:
