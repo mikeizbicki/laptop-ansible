@@ -2,6 +2,11 @@
   connection: local
   become: yes
   tasks:
+
+    ########################################
+    # Configure system
+    ########################################
+
     - name: Update apt cache
       apt:
         update_cache: yes
@@ -11,18 +16,40 @@
         git config --global user.email "ansible@localhost" || true
         git config --global user.name "Ansible" || true
       become: no
-        
+
     - name: Install essential packages
       apt:
         name:
+          # desktop
+          - firefox-esr
+
+          # games
+          - luanti
+          - 0ad
+
+          # xmonad
+          - xmonad
+          - libghc-xmonad-contrib-dev
+          - kitty
+          - xmobar
+          - scrot
+
+          # dev
           - vim
           - git
           - htop
-          - firefox-esr
-          - luanti
-          - 0ad
         state: present
 
+    - name: Add garage host entry
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.4.10 garage"
+        state: present
+        backup: yes
+
+    ########################################
+    # Configure user
+    ########################################
     - name: Add user to sudoers
       user:
         name: user
@@ -44,30 +71,48 @@
         rm -rf "{{ ansible_env.HOME }}/dotfiles-temp"
       become: no
 
-    - name: Add garage host entry
-      lineinfile:
-        path: /etc/hosts
-        line: "192.168.4.131 garage"
-        state: present
-        backup: yes
-
-    - name: Create Firefox policies directory
-      file:
-        path: /etc/firefox-esr/policies
-        state: directory
-        mode: '0755'
-
-    - name: Install uBlock Origin via Firefox policy
+    ########################################
+    # Configure window manager
+    ########################################
+    - name: Create xmonad desktop entry
       copy:
+        dest: /usr/share/xsessions/xmonad.desktop
         content: |
-          {
-            "policies": {
-              "Extensions": {
-                "Install": [
-                  "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
-                ]
-              }
-            }
-          }
-        dest: /etc/firefox-esr/policies/policies.json
-        mode: '0644'
+          [Desktop Entry]
+          Name=XMonad
+          Comment=Lightweight tiling window manager
+          Exec=xmonad
+          Type=Application
+          DesktopNames=XMonad
+
+    - name: Set xmonad as default session for user
+      copy:
+        dest: /var/lib/AccountsService/users/user
+        content: |
+          [User]
+          Session=xmonad
+
+    - name: Configure GDM autologin
+      lineinfile:
+        path: /etc/gdm3/daemon.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        insertafter: '^\[daemon\]'
+      loop:
+        - { regexp: '^#?AutomaticLoginEnable', line: 'AutomaticLoginEnable=true' }
+        - { regexp: '^#?AutomaticLogin=', line: 'AutomaticLogin=user' }
+
+    - name: Disable sleep and screen blank via logind
+      lineinfile:
+        path: /etc/systemd/logind.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^#?IdleAction=', line: 'IdleAction=ignore' }
+        - { regexp: '^#?HandleLidSwitch=', line: 'HandleLidSwitch=ignore' }
+      notify: restart logind
+
+    - name: Recompile xmonad
+      command: xmonad --recompile
+      become: no
+      become_user: user
