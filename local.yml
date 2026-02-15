@@ -109,11 +109,6 @@
         - { regexp: '^#?HandleLidSwitch=', line: 'HandleLidSwitch=ignore' }
       notify: restart logind
 
-    - name: Recompile xmonad
-      command: xmonad --recompile
-      become: yes
-      become_user: user
-
   handlers:
     - name: restart logind
       systemd:
