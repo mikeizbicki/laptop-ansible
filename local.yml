@@ -17,23 +17,27 @@
           # desktop
           - firefox-esr
           - thunderbird
+          - texlive-full
 
           # games
           - luanti
           - 0ad
 
           # xmonad
+          - gsimplecal
           - haskell-stack
-          - trayer
-          - xmonad
-          - libghc-xmonad-contrib-dev
           - kitty
-          - xmobar
-          - scrot
-          - network-manager-gnome
-          - mate-power-manager
+          - libghc-xmonad-contrib-dev
           - mate-media
+          - mate-power-manager
+          - network-manager-gnome
+          - pnmixer
+          - scrot
+          - trayer
           - x11-xserver-utils
+          - xfonts-base
+          - xmobar
+          - xmonad
 
           # dev
           - vim
