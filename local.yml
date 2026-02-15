@@ -116,3 +116,10 @@
       command: xmonad --recompile
       become: no
       become_user: user
+
+  handlers:
+    - name: restart logind
+      systemd:
+        name: systemd-logind
+        state: restarted
+
