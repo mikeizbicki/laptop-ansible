@@ -63,7 +63,7 @@
         cd $HOME
         git init -q
         git remote add origin https://github.com/mikeizbicki/dotfiles
-        git fetch dotfiles
+        git fetch origin dotfiles
         git checkout -f dotfiles
       become: yes
       become_user: user
