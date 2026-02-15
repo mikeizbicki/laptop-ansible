@@ -30,6 +30,10 @@
           - kitty
           - xmobar
           - scrot
+          - network-manager-gnome
+          - mate-power-manager
+          - mate-media
+          - x11-xserver-utils
 
           # dev
           - vim
