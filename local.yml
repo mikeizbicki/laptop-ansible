@@ -23,6 +23,8 @@
           - 0ad
 
           # xmonad
+          - haskell-stack
+          - trayer
           - xmonad
           - libghc-xmonad-contrib-dev
           - kitty
