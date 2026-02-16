@@ -104,7 +104,7 @@
       shell: |
         cd $HOME
         python3 -m venv .venv
-        . venv/bin/activate
+        . .venv/bin/activate
         pip3 install llm llm-groq llm-anthropic
       become: yes
       become_user: user
