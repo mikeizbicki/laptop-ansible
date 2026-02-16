@@ -46,6 +46,8 @@
           - xmonad
 
           # dev
+          - sqlite3
+          - libsqlite3-dev
           - vim
           - git
           - python3
