@@ -18,15 +18,16 @@
           - firefox-esr
           - thunderbird
           - texlive-full
+          - xmame
 
           # media
           - vlc
           - mplayer
-          - libdvdcss2
 
           # games
           - luanti
           - 0ad
+          - fxeux
 
           # xmonad
           - dmenu
