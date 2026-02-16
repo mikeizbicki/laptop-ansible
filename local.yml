@@ -19,11 +19,17 @@
           - thunderbird
           - texlive-full
 
+          # media
+          - vlc
+          - mplayer
+          - libdvdcss2
+
           # games
           - luanti
           - 0ad
 
           # xmonad
+          - dmenu
           - gsimplecal
           - haskell-stack
           - kitty
@@ -42,14 +48,19 @@
           # dev
           - vim
           - git
-          - htop
+          - python3
+          - python3-pip
+          - ffmpeg
+
         state: present
 
-    - name: Add garage host entry
-      lineinfile:
-        path: /etc/hosts
-        line: "192.168.4.10 garage"
-        state: present
+    - name: Configure /etc/hosts
+      copy:
+        src: hosts
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: '0644'
         backup: yes
 
     ########################################
@@ -68,6 +79,32 @@
         git remote add origin https://github.com/mikeizbicki/dotfiles || git remote set-url origin https://github.com/mikeizbicki/dotfiles
         git fetch origin dotfiles
         git checkout -f dotfiles
+      become: yes
+      become_user: user
+
+    - name: Setup directory structure
+      shell: |
+        cd $HOME
+
+        # delete empty folders created by (Desktop, Downloads, etc.)
+        # and create the folders I like
+        rmdir * || true
+        mkdir proj tmp mnt downloads
+
+        # ensure secrets have proper permissions
+        touch .env
+        chmod 400 .env
+        mkdir -p .keys
+        chmod 500 .keys
+      become: yes
+      become_user: user
+
+    - name: Install python utils
+      shell: |
+        cd $HOME
+        python3 -m venv .venv
+        . venv/bin/activate
+        pip3 install llm llm-groq llm-anthropic
       become: yes
       become_user: user
 
