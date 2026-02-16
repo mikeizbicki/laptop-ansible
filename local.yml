@@ -18,7 +18,6 @@
           - firefox-esr
           - thunderbird
           - texlive-full
-          - xmame
 
           # media
           - vlc
