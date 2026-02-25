@@ -18,6 +18,9 @@
           - firefox-esr
           - thunderbird
           - texlive-full
+          - konqueror
+          - okular
+          - okular-extra-backends
 
           # media
           - vlc
@@ -45,19 +48,24 @@
           - xmobar
           - xmonad
 
+          # utils
+          - curl
+          - ffmpeg
+          - nmap
+          - openconnect
+          - rsync
+          - sshfs
+          - xsel
+
           # dev
           - sqlite3
           - libsqlite3-dev
           - vim
           - git
+          - git-lfs
           - python3
           - python3-pip
           - python3-venv
-          - ffmpeg
-          - nmap
-          - rsync
-          - sshfs
-          - xsel
 
         state: present
 
@@ -136,15 +144,49 @@
           [User]
           Session=xmonad
 
-    - name: Disable sleep and screen blank via logind
-      lineinfile:
-        path: /etc/systemd/logind.conf
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-      loop:
-        - { regexp: '^#?IdleAction=', line: 'IdleAction=ignore' }
-        - { regexp: '^#?HandleLidSwitch=', line: 'HandleLidSwitch=ignore' }
+    ########################################
+    # Configure power management
+    # ---
+    # The goal is for the laptop to never sleep.
+    # The power button should hibernate.
+    ########################################
+    - name: Disable MATE power manager sleep/suspend
+      shell: |
+        gsettings set org.mate.power-manager sleep-display-ac 0
+        gsettings set org.mate.power-manager sleep-display-battery 0
+        gsettings set org.mate.power-manager button-lid-ac 'nothing'
+        gsettings set org.mate.power-manager button-lid-battery 'nothing'
+        gsettings set org.mate.power-manager button-suspend 'nothing'
+        gsettings set org.mate.power-manager action-sleep-type-ac 'nothing'
+        gsettings set org.mate.power-manager action-sleep-type-battery 'nothing'
+        gsettings set org.mate.power-manager button-power 'hibernate'
+      become: yes
+      become_user: user
+
+    - name: Configure power button to hibernate
+      copy:
+        dest: /etc/systemd/logind.conf.d/power-button.conf
+        content: |
+          [Login]
+          HandlePowerKey=hibernate
+        owner: root
+        group: root
+        mode: '0644'
       notify: restart logind
+
+    - name: Ensure logind.conf.d directory exists
+      file:
+        path: /etc/systemd/logind.conf.d
+        state: directory
+        mode: '0755'
+
+    - name: Mask systemd sleep targets (safety net)
+      systemd:
+        name: "{{ item }}"
+        masked: yes
+      loop:
+        - sleep.target
+        - suspend.target
 
   handlers:
     - name: restart logind
