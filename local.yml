@@ -33,6 +33,7 @@
 
           # xmonad
           - dmenu
+          - dunst
           - gsimplecal
           - haskell-stack
           - kitty
