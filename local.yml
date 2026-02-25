@@ -119,7 +119,7 @@
         cd $HOME
         python3 -m venv .venv
         . .venv/bin/activate
-        pip3 install llm llm-groq llm-anthropic
+        pip3 install llm llm-groq llm-anthropic ttok files-to-prompt
       become: yes
       become_user: user
 
