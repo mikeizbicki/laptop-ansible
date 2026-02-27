@@ -150,6 +150,8 @@
     # ---
     # The goal is for the laptop to never sleep.
     # The power button should hibernate.
+    # There's lots of settings being changed here
+    # because I'm not sure what exactly is causing sleeping.
     ########################################
     - name: Disable MATE power manager sleep/suspend
       shell: |
@@ -170,24 +172,40 @@
         state: directory
         mode: '0755'
 
-    - name: Configure power button to hibernate
+    - name: Configure logind
       copy:
         dest: /etc/systemd/logind.conf.d/power-button.conf
         content: |
           [Login]
           HandlePowerKey=hibernate
+          HandleLidSwitch=ignore
+          HandleLidSwitchExternalPower=ignore
+          IdleAction=ignore
         owner: root
         group: root
         mode: '0644'
       notify: restart logind
 
-    - name: Mask systemd sleep targets (safety net)
+    - name: Mask systemd sleep targets
       systemd:
         name: "{{ item }}"
         masked: yes
       loop:
         - sleep.target
         - suspend.target
+        - hybrid-sleep.target
+
+    - name: Disable GDM automatic suspend
+      copy:
+        dest: /etc/dconf/db/gdm.d/disable-suspend
+        content: |
+          [org/gnome/settings-daemon/plugins/power]
+          sleep-inactive-ac-type='nothing'
+          sleep-inactive-battery-type='nothing'
+      notify: update dconf
+
+    - name: update dconf
+      command: dconf update
 
   handlers:
     - name: restart logind
