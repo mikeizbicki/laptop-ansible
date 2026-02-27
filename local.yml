@@ -210,12 +210,11 @@
           sleep-inactive-battery-type='nothing'
       notify: update dconf
 
-    - name: update dconf
-      command: dconf update
-
   handlers:
     - name: restart logind
       systemd:
         name: systemd-logind
         state: restarted
 
+    - name: update dconf
+      command: dconf update
