@@ -195,6 +195,12 @@
         - suspend.target
         - hybrid-sleep.target
 
+    - name: Ensure GDM directories exist
+      file:
+        path: /etc/dconf/db/gdm.d
+        state: directory
+        mode: '0755'
+
     - name: Disable GDM automatic suspend
       copy:
         dest: /etc/dconf/db/gdm.d/disable-suspend
