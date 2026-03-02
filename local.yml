@@ -52,6 +52,7 @@
           # utils
           - curl
           - ffmpeg
+          - jmtpfs
           - nmap
           - openconnect
           - rsync
@@ -181,6 +182,7 @@
           HandleLidSwitch=ignore
           HandleLidSwitchExternalPower=ignore
           IdleAction=ignore
+          IdleActionSec=infinity
         owner: root
         group: root
         mode: '0644'
@@ -209,6 +211,33 @@
           sleep-inactive-ac-type='nothing'
           sleep-inactive-battery-type='nothing'
       notify: update dconf
+
+    - name: Disable gsd-power autostart
+      copy:
+        dest: /home/user/.config/autostart/org.gnome.SettingsDaemon.Power.desktop
+        content: |
+          [Desktop Entry]
+          Hidden=true
+        owner: user
+        group: user
+
+    - name: Disable GNOME power management suspend for user
+      shell: |
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout 0
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
+      become: yes
+      become_user: user
+
+    - name: Disable GNOME power management suspend
+      shell: |
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout 0
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
+      become: yes
+      become_user: user
 
   handlers:
     - name: restart logind
