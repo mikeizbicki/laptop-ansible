@@ -212,15 +212,6 @@
           sleep-inactive-battery-type='nothing'
       notify: update dconf
 
-    - name: Disable gsd-power autostart
-      copy:
-        dest: /home/user/.config/autostart/org.gnome.SettingsDaemon.Power.desktop
-        content: |
-          [Desktop Entry]
-          Hidden=true
-        owner: user
-        group: user
-
     - name: Disable GNOME power management suspend for user
       shell: |
         gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
