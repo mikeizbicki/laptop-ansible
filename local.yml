@@ -230,6 +230,16 @@
       become: yes
       become_user: user
 
+    - name: Disable all suspend via systemd
+      copy:
+        dest: /etc/systemd/sleep.conf
+        content: |
+          [Sleep]
+          AllowSuspend=no
+          AllowHibernation=yes
+          AllowSuspendThenHibernate=no
+          AllowHybridSleep=no
+
   handlers:
     - name: restart logind
       systemd:
