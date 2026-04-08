@@ -89,6 +89,27 @@
         backup: yes
 
     ########################################
+    # Configure Brother scanner
+    ########################################
+    - name: Install Brother scanner dependencies
+      apt:
+        name:
+          - libusb-0.1-4
+          - sane
+          - sane-utils
+        state: present
+
+    - name: Install Brother brscan4 driver
+      apt:
+        deb: "{{ playbook_dir }}/brscan4-0.4.11-1.amd64.deb"
+      register: brscan_install
+
+    - name: Configure Brother scanner (DCP-L2550DW via USB)
+      command: brsaneconfig4 -a name=Brother model=DCP-L2550DW nodename=local
+      args:
+        creates: /etc/opt/brother/scanner/brscan4/brsanenetdevice4.cfg
+
+    ########################################
     # Configure user
     ########################################
     - name: Add user to sudoers
