@@ -94,7 +94,6 @@
       apt:
         name:
           - libusb-0.1-4
-          - sane
           - sane-utils
         state: present
 
