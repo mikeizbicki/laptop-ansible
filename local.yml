@@ -15,12 +15,16 @@
       apt:
         name:
           # desktop
+          - anki
+          - caffeine
+          - cheese
           - firefox-esr
           - thunderbird
           - texlive-full
           - konqueror
           - okular
           - okular-extra-backends
+          - xsane
 
           # media
           - vlc
@@ -53,16 +57,20 @@
           - curl
           - ffmpeg
           - jmtpfs
+          - net-tools
           - nmap
           - openconnect
+          - pandoc
           - rsync
           - sshfs
+          - xclip
+          - xmlstarlet
           - xsel
 
           # dev
           - sqlite3
           - libsqlite3-dev
-          - vim
+          - vim-gtk3
           - git
           - git-lfs
           - python3
